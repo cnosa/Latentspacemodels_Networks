@@ -1,10 +1,10 @@
-# LATENTSPACES_NETWORK_MANIFOLD
+# Latent space models - Networks
 
 This repository contains experiments and analyses of latent space models applied to network data, using both Euclidean and spherical geometries. The main goal is to assess how well these models capture social structure across various historical and synthetic networks. The code was executed on a laptop with an Intel Core i5 processor, 24 GB of RAM, and a 512 GB SSD.
 
 ## Repository structure
 
-- **`LATENTSPACES_NETWORK_MANIFOLD/`**
+- **`Latentspacemodels_Networks/`**
   - `AdditionalContent/` # Extra resources (images, tests)
   - `Example_Karate/` # Karate club example data & notebook
   - `Example_Monks/` # Monks network example & data
@@ -65,9 +65,9 @@ If you use this repository or its results in your research, please cite it as:
               relationships and community structure, naturally captures cyclical patterns, and ensures
               bounded distances, thereby mitigating degeneracy issues common in traditional approaches.
               Bayesian inference is performed via Markov chain Monte Carlo methods to estimate both latent
-              positions and other model parameters. The approach is demonstrated using two benchmark social
-              network datasets, yielding improved model fit and interpretability relative to conventional
+              positions and other model parameters. The approach is demonstrated using a benchmark social
+              network dataset, yielding improved model fit and interpretability relative to conventional
               latent space models.},
-  keywords = {Bayesian inference, latent space models, network analysis, spherical geometry, social networks}
+  keywords = {latent space models, spherical embedding, social networks, MCMC-based estimation}
 }
 ```
