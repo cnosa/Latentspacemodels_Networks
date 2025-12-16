@@ -1,0 +1,20 @@
+[project]
+name = "latentspacemodels"
+version = "0.1.0"
+description = "Latent space models for networks with Euclidean and spherical geometries"
+authors = [
+    {name="Carlos Nosa"},
+    {name="Juan Sosa"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy",
+    "scipy",
+    "networkx",
+    "matplotlib"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
