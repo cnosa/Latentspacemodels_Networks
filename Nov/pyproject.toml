@@ -1,7 +1,7 @@
 [project]
 name = "latentspacemodels"
 version = "0.1.0"
-description = "Latent space models for networks with Euclidean and spherical geometries"
+description = "Latent space models for networks with Euclidean, spherical and hyperbolic geometries"
 authors = [
     {name="Carlos Nosa"},
     {name="Juan Sosa"}
