@@ -1,3 +1,5 @@
+
+
 class Estimator:
     def __init__(self, model: LatentSpaceModel, method="MLE"):
         self.model = model
