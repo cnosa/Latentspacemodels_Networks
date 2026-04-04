@@ -719,7 +719,6 @@ def Estimation_LSMN(Y, Theta, Model):
         print("Searching for MLE using gradient ascent")
         best_ll = -np.inf
         best_params = None
-
         for s in range(n_starts):
             # Random initialization
             Z0 = np.random.randn(n, d)
