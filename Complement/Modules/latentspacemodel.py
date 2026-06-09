@@ -376,7 +376,7 @@ class LatentSpaceLikelihood:
         return {"alpha0": self.grad_alpha0(alpha0, xi, Z, Y, mask), "xi": self.grad_xi(alpha0, xi, Z, Y, mask), "Z": self.grad_Z(alpha0, xi, Z, Y, mask)}
     
 class LatentSpacePrior:
-    def __init__(self, geometry, sigma2_alpha0=10.0, a_xi=2.0, fixed_params:dict = {}):
+    def __init__(self, geometry, sigma2_alpha0=3.0, a_xi=1.0, fixed_params:dict = {}):
         self.sigma2_alpha0 = sigma2_alpha0
         self.a_xi = a_xi
         self.geometry = geometry
@@ -492,6 +492,8 @@ class LatentSpaceModel:
         }
         self.init_params = self.get_params().copy()
         return self.get_params()
+    
+
     def simulate_network(self, key):
         p = self.get_params()
         alpha0 = p["alpha0"]

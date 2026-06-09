@@ -159,7 +159,7 @@ class MAPInference(BaseInference):
             params["Z"] = Z_new
         self._save_state(grads)
 
-    def fit(self, n_iter=5000, tol=1e-6, patience=50, verbose=True, use_tqdm=True, init_params=None):
+    def fit(self, n_iter=5000, tol=1e-5, patience=101, verbose=True, use_tqdm=True, init_params=None):
         if init_params is not None:
             self.model.latent_params = {k: (v.copy() if hasattr(v, "copy") else v) for k, v in init_params.items()
                 if k not in self.model.fixed_params}
@@ -187,7 +187,7 @@ class MAPInference(BaseInference):
                 counter += 1
             if counter >= patience:
                 if verbose:
-                    msg = f"[STOP] Early stopping at iter {i} (no improvement in {patience} steps)"
+                    msg = f"[STOP] Early stopping at iter {i-1} (no improvement in {patience} steps)"
                     if use_tqdm:
                         iterator.write(msg)
                     else:
@@ -198,7 +198,7 @@ class MAPInference(BaseInference):
         self._store_in_model()
         return self.result
     
-    def fit_multi_start(self, n_starts=25, n_iter=5000, tol=1e-4, patience=50, seeds=None, verbose=True, use_tqdm=True,init_params=None):
+    def fit_multi_start(self, n_starts=25, n_iter=5000, tol=1e-5, patience=101, seeds=None, verbose=True, use_tqdm=True,init_params=None):
         best_logpost = -jnp.inf
         best_result = None
         all_runs = []
