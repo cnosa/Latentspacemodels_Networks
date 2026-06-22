@@ -24,7 +24,8 @@ class BaseInference:
             "logpost": [],
             "loglik": [],
             "logprior": [],
-            "grads": []
+            "grads": [],
+            "step_norm": [],
         }
         self.result = None
 
@@ -131,13 +132,17 @@ class MAPInference(BaseInference):
         }
 
     def step(self):
+        eps = 0.01
         grads = self.model.grad_log_posterior() 
         params = self.model.latent_params
         geom = self.model.geometry
+        step_norm_sq = 0.0
 
         # alpha0
         if "alpha0" in params:
-            params["alpha0"] = params["alpha0"] + self.lr * grads["alpha0"]
+            g_alpha0 = grads["alpha0"] / (jnp.abs(grads["alpha0"]) + eps)
+            params["alpha0"] = params["alpha0"] + self.lr * g_alpha0
+            step_norm_sq += float((self.lr * g_alpha0)**2)
 
         # xi
         if "xi" in params:
@@ -145,21 +150,27 @@ class MAPInference(BaseInference):
             gxi = grads["xi"]
             simplex = self.model.weights
             gxi = simplex.project_to_tangent(xi, gxi)
+            gxi = gxi / (jnp.linalg.norm(gxi) + eps)
             xi_new = simplex.exponential_map(xi, self.lr * gxi)
             xi_new = simplex.project_to_domain(xi_new)
             params["xi"] = xi_new
+            step_norm_sq += float(jnp.sum((self.lr * gxi)**2))
             
         # Z
         if "Z" in params:
             Z = params["Z"]
             gZ = grads["Z"]
             gZ_tangent = jax.vmap(geom.project_to_tangent)(Z, gZ)
+            gZ_tangent = gZ_tangent / (jnp.linalg.norm(gZ_tangent) + eps)
             Z_new = jax.vmap(geom.exponential_map)(Z, self.lr * gZ_tangent)
             Z_new = jax.vmap(geom.project_to_domain)(Z_new)
             params["Z"] = Z_new
+            step_norm_sq += float(jnp.sum((self.lr * gZ_tangent)**2))
+        
+        self.history["step_norm"].append(step_norm_sq**0.5)
         self._save_state(grads)
 
-    def fit(self, n_iter=5000, tol=1e-5, patience=101, verbose=True, use_tqdm=True, init_params=None):
+    def fit(self, n_iter=5000, tol=1e-5, patience=201, verbose=True, use_tqdm=True, init_params=None):
         if init_params is not None:
             self.model.latent_params = {k: (v.copy() if hasattr(v, "copy") else v) for k, v in init_params.items()
                 if k not in self.model.fixed_params}
@@ -177,9 +188,10 @@ class MAPInference(BaseInference):
                     "logpost": f"{current:.4f}",
                     "loglik": f"{self.history['loglik'][-1]:.4f}",
                     "logprior": f"{self.history['logprior'][-1]:.4f}",
+                    "||grad||": f"{self.history["step_norm"][-1]:.4f}",
                     "patience": counter
                 })
-            if current > best + tol:
+            if (current > best + tol):
                 best = current
                 best_params = {k: (v.copy() if hasattr(v, "copy") else v) for k,v in self.model.get_params().items()}
                 counter = 0
@@ -214,7 +226,7 @@ class MAPInference(BaseInference):
                     if kk not in self.model.fixed_params}
             else:
                 self.model.initialize_from_prior(n=self.model.Y.shape[0], seed=seed)
-            self.history = {"params": [], "logpost": [], "loglik": [], "logprior": [], "grads": []}
+            self.history = {"params": [], "logpost": [], "loglik": [], "logprior": [], "grads": [], "step_norm": []}
             self.fit(n_iter=n_iter, tol=tol, patience=patience, verbose=verbose, use_tqdm=use_tqdm, init_params=init_params)
             final_logpost = self.history["logpost"][-1]
             result = self.model.get_params()

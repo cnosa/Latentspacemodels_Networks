@@ -582,4 +582,3 @@ class LatentSpaceModel:
         return model
 
 
-
