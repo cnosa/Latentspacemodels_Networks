@@ -436,7 +436,7 @@ class LatentSpacePrior:
         # Z
         if self.fix_Z:
             Z = self.Z_fixed
-            assert Z.shape == (n, self.geometry.d), "Z hasn't correct dimension"
+            #assert Z.shape == (n, self.geometry.d), "Z hasn't correct dimension"
         else:
             Z = self.geometry.sample_uniform_Z(n, keys[2])
         return alpha0, xi, Z

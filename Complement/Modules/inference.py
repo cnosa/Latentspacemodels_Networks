@@ -43,6 +43,7 @@ class MAPInference(BaseInference):
         super().__init__(model)
         self.lr = lr
         self.model.inference_method = "MAP"
+        self.model.inferred = {"MAP": {}}
 
     def _save_state(self, grads=None):
         params = self.model.get_params()
