@@ -54,11 +54,11 @@ pip install -r requirements.txt
 If you use this repository or its results in your research, please cite it as:
 
 ```bibtex
-@article{sosanosa2025spherical,
+@article{nosasosa2025spherical,
   title   = {Spherical latent space models for social network analysis},
-  author  = {Sosa, Juan and Nosa, Carlos},
+  author  = {Nosa, Carlos and Sosa, Juan},
   journal = {Universidad Nacional de Colombia},
-  year    = {2025},
+  year    = {2026},
   abstract= {This article introduces a spherical latent space model for social network analysis,
               embedding actors on a hypersphere rather than in Euclidean space as in standard
               latent space models. The spherical geometry facilitates the representation of transitive
